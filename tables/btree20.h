@@ -1,6 +1,6 @@
 #include <inttypes.h>
 
-enum { btree20_order = 6 };
+enum { btree20_order = 20};
 
 static const uint32_t btree20_steps[] = { 1555, 259, 43, 7, 1, 0 };
 
