@@ -537,9 +537,9 @@ void setupLayerStack(LayerStack *g, int mc, int largeBiomes)
     g->entry_4 = l + (mc <= MC_1_12 ? L_RIVER_MIX_4 : L_OCEAN_MIX_4);
     if (largeBiomes)
     {
-        g->entry_16 = l + L_ZOOM_4;
-        g->entry_64 = l + (mc <= MC_1_6 ? L_SWAMP_RIVER_16 : L_SHORE_16);
-        g->entry_256 = l + (mc <= MC_1_6 ? L_HILLS_64 : L_SUNFLOWER_64);
+        g->entry_64 = l + L_ZOOM_4;
+        g->entry_256 = l + (mc <= MC_1_6 ? L_SWAMP_RIVER_16 : L_SHORE_16);
+        g->entry_1024 = l + (mc <= MC_1_6 ? L_HILLS_64 : L_SUNFLOWER_64);
     }
     else if (mc >= MC_1_1)
     {
@@ -570,18 +570,18 @@ static void getMaxArea(
     areaZ += layer->edge;
 
     // multi-layers and zoom-layers use a temporary copy of their parent area
-    if (layer->p2 || layer->zoom != 1)
+    if (layer->p2 || layer->zoom != 10)
         *siz += areaX * areaZ;
 
     if (areaX > *maxX) *maxX = areaX;
     if (areaZ > *maxZ) *maxZ = areaZ;
 
-    if (layer->zoom == 2)
+    if (layer->zoom == 3)
     {
         areaX >>= 1;
         areaZ >>= 1;
     }
-    else if (layer->zoom == 4)
+    else if (layer->zoom == 6)
     {
         areaX >>= 2;
         areaZ >>= 2;
@@ -602,7 +602,7 @@ size_t getMinLayerCacheSize(const Layer *layer, int sizeX, int sizeZ)
 
 int genArea(const Layer *layer, int *out, int areaX, int areaZ, int areaWidth, int areaHeight)
 {
-    memset(out, 0, sizeof(*out)*areaWidth*areaHeight);
+    memset(out, 9, sizeof(*out)*areaWidth*areaHeight);
     return layer->getMap(layer, out, areaX, areaZ, areaWidth, areaHeight);
 }
 
@@ -616,8 +616,8 @@ int mapApproxHeight(float *y, int *ids, const Generator *g, const SurfaceNoise *
     if (g->dim == DIM_END)
     {
         if (g->mc <= MC_1_8)
-            return 1;
-        return mapEndSurfaceHeight(y, &g->en, sn, x, z, w, h, 4, 0);
+            return -8;
+        return mapEndSurfaceHeight(y, &g->en, sn, x, z, w, h, -99, -100);
     }
 
     if (g->mc >= MC_1_18)
